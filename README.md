@@ -1,3 +1,5 @@
+# Name : Jesu Smartia A
+# Reg no: 212223110016
 # Uploading temperature sensor data in Thing Speak cloud
 
 # AIM:
@@ -71,10 +73,76 @@ Automatically act on your data and communicate using third-party services like T
 
 
 # PROGRAM:
+```
+#include "ThingSpeak.h"
+#include <WiFi.h>
+#include "DHT.h"
+
+char ssid[] = "Smart A35";//your wifi ssid//
+char pass[] = "smartia7";//your wifi pass//
+
+const  int out = 2;
+float temperature = 0;
+float Humidity =0;
+WiFiClient client;
+DHT dht(out,DHT11);
+
+unsigned long myChannelField = 3087405;
+const int TemperatureField = 1;
+const int HumidityField =2;
+const char* myWriteAPIKey = "SPTHI9MRGLAVAP94";
+
+void setup() {
+  Serial.begin(115200);
+  ThingSpeak.begin(client);
+  dht.begin();
+  pinMode(out,INPUT);
+}
+
+void loop() {
+
+  if(WiFi.status() != WL_CONNECTED)
+  {
+    Serial.print("Attempting to connect SSID: ");
+    Serial.print(ssid);
+    while(WiFi.status() != WL_CONNECTED)
+    {
+      WiFi.begin(ssid,pass);
+      Serial.print(".");
+      delay(5000);
+    }
+    Serial.println("\nConnected.");
+  }
+  
+  float Temperature = dht.readTemperature();
+  float Humidity = dht.readHumidity();
+
+Serial.print("Temperature: ");
+Serial.print(Temperature);
+Serial.println(" C");
+
+
+Serial.print("Humidity: ");
+Serial.print(Humidity);
+Serial.println(" g.m-3");
+
+
+
+ThingSpeak.setField(TemperatureField,Temperature);
+ThingSpeak.setField(HumidityField,Humidity);
+ThingSpeak.writeFields(myChannelField,myWriteAPIKey);
+delay(5000);
+}
+```
 
 # CIRCUIT DIAGRAM:
 
+![WhatsApp Image 2025-10-08 at 09 57 41_99487e8e](https://github.com/user-attachments/assets/aafa1bb6-5812-4042-8a17-ad2611b06f6c)
+
+
 # OUTPUT:
+<img width="1920" height="1080" alt="Screenshot 2025-10-08 095607" src="https://github.com/user-attachments/assets/7fe38cbe-1c92-4981-a304-1176b2117a45" />
+
 
 # RESULT:
 
